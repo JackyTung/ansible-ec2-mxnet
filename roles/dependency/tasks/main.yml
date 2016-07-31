@@ -1,0 +1,25 @@
+- name: Apt Update & Upgrade
+  sudo: True
+  apt: 
+    update_cache: yes
+    upgrade: dist
+
+- name: Install git
+  sudo: True
+  apt:
+    pkg: git
+    state: present
+
+- name: Install List of packages
+  sudo: True
+  apt: name={{item}} state=installed update_cache=yes
+  with_items:
+     - build-essential
+     - libatlas-base-dev
+     - libopencv-dev
+     - libglu1-mesa
+     - libglu1-mesa-dev
+     - libcurl4-openssl-dev
+     - python-pip
+     - python-numpy
+     - zip

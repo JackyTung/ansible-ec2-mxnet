@@ -1,0 +1,15 @@
+# ec2 variable
+ec2_keypair: "your-key-pair"    # need to modify
+ec2_security_group: "your-security-group"  # need to modify
+ec2_instance_type: "your-instance-type" # ex: g2.2xlarge
+ec2_image: "your-image"  # ex: ami-9abea4fb
+ec2_region: "your-region" # ex: us-west-2
+ec2_count: "1"
+ec2_tag_Name: "your-ec2-instance-name" # need to modify
+ec2_tag_Type: "your-tag-type" # need to modify
+ec2_tag_Environment: "dev"
+ec2_volume_size: 200 # 200 is represnet 200G size
+
+# aws crediential
+aws_access_key: "your-access-key"
+aws_secret_key: "your-secret-key"

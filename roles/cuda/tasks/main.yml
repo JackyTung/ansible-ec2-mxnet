@@ -1,0 +1,34 @@
+- name: Prepare to install cuda
+  sudo: True
+  apt:
+     update_cache: yes
+     upgrade: full
+
+- shell: sudo apt-get install -y linux-image-extra-`uname -r`
+- sudo: True
+  apt: update_cache=yes
+
+- name: register CUDA repository
+  get_url: 
+    url: http://developer.download.nvidia.com/compute/cuda/7.5/Prod/local_installers/cuda-repo-ubuntu1404-7-5-local_7.5-18_amd64.deb
+    dest: /home/ubuntu/
+- shell: 'sudo dpkg -i cuda-repo-ubuntu1404-7-5-local_7.5-18_amd64.deb'
+
+- sudo: True
+  apt: update_cache=yes
+
+- name: install CUDA
+  sudo: True
+  apt: name=cuda update_cache=yes
+
+- name: write cuda environment variables to bash profile
+  sudo: True
+  copy: src=./cuda.sh dest=/etc/profile.d/
+
+- name: Download Cudnn 5.1
+  get_url: 
+  url: https://{{your-path}}/cuda/cudnn-7.5-linux-x64-v5.1-rc.tgz
+    dest: /home/ubuntu/ 
+
+- name: Install Cudnn 5.1
+  shell: "tar xvf cudnn-7.5-linux-x64-v5.1-rc.tgz; cd cuda; sudo cp lib64/* /usr/local/cuda-7.5/lib64/; sudo cp include/cudnn.h /usr/local/cuda-7.5/include/"
