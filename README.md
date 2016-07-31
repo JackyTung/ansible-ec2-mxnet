@@ -59,6 +59,62 @@ aws_secret_key: "your-secret-key"
 ansible-playbook -i inventory deploy.yml
 ```
 
+# deploy.yml overall
+
+```yaml
+- name: Provision an EC2 Instance
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  tags: provisioning
+  roles:
+    - role: launch
+      name: ami_build
+  
+- name: Deploy the application
+  hosts: ami_build
+  vars:
+     ansible_ssh_user: "ubuntu"
+     ansible_ssh_private_key_file: "~/.ssh/{{ec2_keypair}}.pem"
+     ansible_ssh_port: 22
+  roles:
+    - dependency
+    - cuda
+    - mxnet
+
+- name : Build AMI
+  hosts: localhost
+  connection: local
+  gather_facts: True
+  tasks:
+    - name: Create AMI
+      ec2_ami:
+        instance_id: "{{ item.id }}"
+        region: "{{ ec2_region }}"
+        wait: no
+        name: "{{ Your AMI name }}" # need th modify
+        state: present
+      register: ami
+      with_items: "{{ ec2.instances }}"
+
+```
+We use three plays in the playbook. 
+All the three plays share the same variable from group_vars/.
+
+- First play
+launch ec2 instance
+
+- Second play
+recevied the ec2 instance IP, and start to install dependency, cuda, mxnet
+
+- Final play
+save the instance images
+
+# Why use deployment tool?
+Deployment tool can record what we do, step by step.
+We can clearly know what kind of packages are installed.
+It is more convenient to maintain and modify when we transfer our ansible playbook to next deployer. 
+
 # Reference
 - [atplanet/ansible-auto-scaling-tutorial](https://github.com/atplanet/ansible-auto-scaling-tutorial)</br> 
 - [mxnet offical guide](https://github.com/dmlc/mxnet/blob/master/docs/how_to/build.md)</br>
