@@ -29,7 +29,7 @@ roles/
 - groups/all.yml
 Custom your ec2 environment, including keypair, security group, instance type, image, region... etc.
 And remember, add your own aws crediential access/secret key.
-```
+```yaml
 # ec2 variable
 ec2_keypair: "your-key-pair"    # need to modify
 ec2_security_group: "your-security-group"  # need to modify
